@@ -1,0 +1,61 @@
+# Builds an installable Android APK and publishes it on the "android-latest" release.
+# Download link: https://github.com/<owner>/<repo>/releases/download/android-latest/app.apk
+#
+# The APK is signed with the standard React Native debug key from the Expo template, which is
+# enough to install it on your own phone. Publishing on the Play Store needs a real upload key.
+name: Android
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: android
+  cancel-in-progress: true
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: gradle/actions/setup-gradle@v6
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate the native Android project
+        run: npx expo prebuild --platform android --no-install
+
+      - name: Build the release APK
+        working-directory: android
+        # arm64 only: covers current Android phones and builds much faster.
+        run: ./gradlew assembleRelease --no-daemon -PreactNativeArchitectures=arm64-v8a
+
+      - name: Publish the APK
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp android/app/build/outputs/apk/release/app-release.apk app.apk
+          NOTES="Built from commit ${GITHUB_SHA::7}. Download app.apk on your Android phone and open it to install or update."
+          if gh release view android-latest >/dev/null 2>&1; then
+            gh release upload android-latest app.apk --clobber
+            gh release edit android-latest --notes "$NOTES"
+          else
+            gh release create android-latest app.apk --title "Android app (latest)" --notes "$NOTES" --target "$GITHUB_SHA"
+          fi

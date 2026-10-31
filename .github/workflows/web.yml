@@ -1,0 +1,62 @@
+# Checks the app, exports the web version and publishes it on GitHub Pages.
+# Site: https://<owner>.github.io/<repo>/
+name: Web
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck, lint and test
+        run: npm run check
+
+      - name: Export the web app
+        run: |
+          # A repository named <owner>.github.io is served at the root, any other under /<repo>.
+          REPO="${{ github.event.repository.name }}"
+          case "$REPO" in
+            *.github.io) export EXPO_BASE_URL="" ;;
+            *) export EXPO_BASE_URL="/$REPO" ;;
+          esac
+          npx expo export -p web
+          # Single page app: let GitHub Pages serve the app for any deep link.
+          cp dist/index.html dist/404.html
+          touch dist/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publish on GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

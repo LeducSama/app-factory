@@ -1,56 +1,56 @@
-# Welcome to your Expo app 👋
+# App Factory
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Ton usine à applications. Tu décris ce que tu veux, Claude fait le reste : le code, les
+tests, la mise en ligne du site web et la création de l'application Android.
 
-## Get started
+Rien à installer sur ton ordinateur. Tout tourne dans le cloud.
 
-1. Install dependencies
+## Au quotidien
 
-   ```bash
-   npm install
-   ```
+1. Ouvre [claude.ai/code](https://claude.ai/code) : dans le navigateur, dans l'appli mobile
+   (onglet Code) ou dans l'appli de bureau en choisissant un environnement Cloud.
+2. Choisis ce dépôt.
+3. Écris ce que tu veux. Par exemple : « Fais une appli de suivi de dépenses avec des
+   catégories et un graphique par mois. »
 
-2. Start the app
+Pour une nouvelle appli ou une grosse fonctionnalité, Claude te pose au plus trois questions
+et te montre un résumé. Tu réponds « ok » et il construit. Pour les petites modifications,
+il le fait directement.
 
-   ```bash
-   npx expo start
-   ```
+## Où trouver ton appli
 
-In the output, you'll find options to open the app in a
+Remplace `PSEUDO` par ton pseudo GitHub et `DEPOT` par le nom du dépôt.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+| | Lien |
+| --- | --- |
+| Web | `https://PSEUDO.github.io/DEPOT/` |
+| Android | `https://github.com/PSEUDO/DEPOT/releases/download/android-latest/app.apk` |
 
-You can start developing by editing the files inside the **src/app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+Les deux se mettent à jour tout seuls après chaque modification : quelques minutes pour le
+web, environ quinze minutes pour Android. Sur le téléphone, ouvre le lien Android, télécharge
+`app.apk` et ouvre le fichier. La première fois, Android demande d'autoriser l'installation
+depuis cette source. Les versions suivantes s'installent par dessus.
 
-## Get a fresh project
+## Une nouvelle appli, un nouveau dépôt
 
-When you're ready, run:
+Ce dépôt sert de modèle. Pour démarrer une autre appli, ouvre ce dépôt sur GitHub, clique
+sur « Use this template », donne un nom, puis ouvre le nouveau dépôt dans claude.ai/code.
+Ta première demande transforme le modèle en ta nouvelle appli.
 
-```bash
-npm run reset-project
-```
+Si l'application GitHub de Claude n'a accès qu'à certains dépôts, ajoute le nouveau dans ses
+réglages sur GitHub. En lui donnant accès à tous tes dépôts, tu n'as plus rien à faire.
 
-This command will move the starter code to the **example** directory and create a blank **src/app** directory where you can start developing.
+## Ce qu'il y a dedans
 
-### Other setup steps
+| Élément | Rôle |
+| --- | --- |
+| `CLAUDE.md` | Les règles que Claude suit : questions, plan, tests, relecture, mise en ligne |
+| `.claude/agents/` | Planificateur, guide de tests et relecteurs de code |
+| `.claude/skills/` | Bonnes pratiques React Native, vérification, finition de l'interface |
+| `.github/workflows/` | Mise en ligne du web et création de l'APK Android à chaque modification |
+| `src/` | Le code de l'appli (Expo, une seule base pour Android et le web) |
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+## Crédits
 
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Agents et skills tirés de [ECC](https://github.com/affaan-m/ECC) par Affaan Mustafa, licence
+MIT (voir `.claude/ECC-LICENSE`). Base de l'appli : modèle Expo, licence MIT (voir `LICENSE`).
